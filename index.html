@@ -1,0 +1,83 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Memory Game</title>
+	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+	<style>
+	* {
+		box-sizing: border-box;
+	}
+	.container {
+		width: 1020px;
+		margin: 0 auto;
+	}
+	.card {
+		height: 200px;
+		width: 150px;
+		background: lightblue;
+		float: left;
+		margin: 10px;
+	}
+	.card:hover {
+		background: lightgray;
+		cursor: pointer;
+	}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="timer"></div>
+
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+		<div class="card"></div>
+	</div>
+<script>
+$(document).ready(function(){
+	var app = {
+		init: function() {
+			app.shuffle();
+			app.clickHandlers();
+		},
+		clickHandlers: function() {
+			$('.card').on('click', function() {
+				app.flipCard($(this));
+			})
+		},
+		shuffle: function() {
+			$('.card').each(function(index){
+				$(this).attr('id', index+1);
+			});
+		},
+		flipCard: function(card) {
+			console.log(card.attr('id'));
+		}
+	}
+	app.init();
+});
+
+</script>
+</body>
+</html>
