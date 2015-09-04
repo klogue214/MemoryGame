@@ -3,7 +3,6 @@
 	<meta charset="UTF-8">
 	<title>Memory Game</title>
 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-	<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 	<style>
 	* {
 		box-sizing: border-box;
@@ -14,32 +13,28 @@
 	}
 	.container {
 		width: 1080px;
-		margin: 0 auto;
+		margin: 25px auto;
 	}
 	.card {
 		height: 200px;
 		width: 150px;
 		float: left;
 		margin: 15px;
+		border: 5px solid #321d12;
 		border-radius: 5px;
-		border: 5px solid #321D12;
-		box-shadow: 5px 5px 10px #321D12;
+		box-shadow: 5px 5px 10px #321d12;
 		background-image: url('card_back.jpg');
 		background-size: cover;
 	}
 	.card:hover {
+		cursor: pointer;
 		border: 5px solid #ffeaa0;
 		box-shadow: 0 0 20px #ffeaa0;
-		cursor: pointer;
 	}
 	.card.selected {
 		border: 5px solid #ffeaa0;
 		box-shadow: 0 0 20px #ffeaa0;
 		transform: rotateY(180deg);
-		transition: 0.5s;
-	}
-	.card.deselected {
-		transform: rotateY(-180deg);
 		transition: 0.5s;
 	}
 	</style>
