@@ -8,66 +8,60 @@
 	* {
 		box-sizing: border-box;
 	}
+	body {
+		background: url('table.jpg');
+		background-size: cover;
+	}
 	.container {
-		width: 1020px;
+		width: 1080px;
 		margin: 0 auto;
 	}
 	.card {
 		height: 200px;
 		width: 150px;
-		background: lightblue;
 		float: left;
-		margin: 10px;
+		margin: 15px;
+		border-radius: 5px;
+		border: 4px solid #321D12;
+		box-shadow: 5px 5px 10px #321D12;
+		background-image: url('card_back.jpg');
+		background-size: cover;
 	}
 	.card:hover {
-		background: lightgray;
+		border: 4px solid #ffeaa0;
+		box-shadow: 0 0 20px #ffeaa0;
 		cursor: pointer;
 	}
 	.card.selected {
-		background: lightgreen;
+		border: 4px solid #ffeaa0;
+		box-shadow: 0 0 20px #ffeaa0;
+		transform: rotateY(180deg);
+		transition: 0.5s;
+	}
+	.card.deselected {
+		transform: rotateY(-180deg);
+		transition: 0.5s;
 	}
 	</style>
 </head>
 <body>
 	<div class="container">
 		<div class="timer"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
-		<div class="card unmatched"></div>
 	</div>
 <script>
 $(document).ready(function(){
 	var app = {
-		cardValues: [1,2,3,4,5,6,7,8,9,10,11,12,1,2,3,4,5,6,7,8,9,10,11,12],
+		cardValues: [1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9],
+		imageType: 'animals',
 		init: function() {
 			app.shuffle();
 			app.clickHandlers();
+			app.preloadImages();
 		},
 		clickHandlers: function() {
 			$('.card').on('click', function() {
 				app.flipCard($(this));
-			})
+			});
 		},
 		shuffle: function() {
 			var swap = 0;
@@ -77,35 +71,48 @@ $(document).ready(function(){
 				temp = app.cardValues[i];
 				app.cardValues[i] = app.cardValues[swap];
 				app.cardValues[swap] = temp;
+				$('.container').append('<div class="card unmatched"></div>');
 			}
 			$('.card').each(function(index){
-				$(this).addClass('card-'+app.cardValues[index]);
 				$(this).attr('data-card', app.cardValues[index]);
 			});
 		},
 		flipCard: function(card) {
-			card.html(card.data('card'));
 			card.addClass('selected');
+			card.css({'background-image': 'url("http://lorempixel.com/150/200/'+app.imageType+'/'+card.data('card')+'")'});
 			if($('.selected').length == 2) {
 				app.checkMatch();
 			}
 		},
 		checkMatch: function() {
 			if($('.selected').first().data('card') == $('.selected').last().data('card')) {
-				$('.selected').each(function() {
-					$(this).removeClass('unmatched').removeClass('selected').animate({ opacity: 0 });
-				});
+				setTimeout(function() {
+					$('.selected').each(function() {
+						$(this).removeClass('unmatched selected').css({'background':''}).animate({ opacity: 0 },{duration: 1000});
+						app.checkWin();
+					});
+				}, 1000);
 			} else {
-				$('.selected').each(function() {
-					$(this).css( 'background-color', 'red' );
-				})
 				setTimeout(function(){
 					$('.selected').each(function() {
-						$(this).removeClass('selected').html('').css('background-color', 'lightblue');
-					})}, 1000);
+						$(this).removeClass('selected').css({'background':''});
+					});
+				}, 1000);
 			}
+		},
+		checkWin: function() {
+			if($('.unmatched').length === 0) {
+				console.log('you won!');
+			}
+		},
+		preloadImages: function() {
+			var img = [];
+			for(i = 0; i < app.cardValues.length; i ++) {
+				img[i] = new Image();
+				img[i].src = "http://lorempixel.com/150/200/"+app.imageType+"/"+i;
+			}	
 		}
-	}
+	};
 	app.init();
 });
 </script>
