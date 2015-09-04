@@ -15,14 +15,24 @@
 		width: 1080px;
 		margin: 25px auto;
 	}
+	.menu {
+		position: absolute;
+		width: 200px;
+		height: 200px;
+		left: 40%;
+		background: #261600;
+		z-index: 5;
+		opacity: 0.85;
+		display: none;
+	}
 	.card {
 		height: 200px;
 		width: 150px;
 		float: left;
 		margin: 15px;
-		border: 5px solid #321d12;
+		border: 5px solid #261600;
 		border-radius: 5px;
-		box-shadow: 5px 5px 10px #321d12;
+		box-shadow: 5px 5px 10px #261600;
 		background-image: url('card_back.jpg');
 		background-size: cover;
 	}
@@ -42,6 +52,9 @@
 <body>
 	<div class="container">
 		<div class="timer"></div>
+	</div>
+	<div class="menu">
+		
 	</div>
 <script>
 $(document).ready(function(){
