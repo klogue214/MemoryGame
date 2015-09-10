@@ -46,6 +46,17 @@
 	}
 	.results {
 		display: none;
+		height: 335px;
+		margin-top: -125px;
+	}
+	.results h2 {
+		border-bottom: 2px solid #ffeaa0;
+		padding-bottom: 4px;
+	}
+	ul {
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
 	}
 	input, label {
 		margin: 10px;
@@ -119,6 +130,11 @@
 	</div>
 	<div class="results">
 		<h1>You did it!</h1>
+		<p class="time"></p>
+		<h2>Fastest Times</h2>
+		<ul class="highscores">
+			
+		</ul>
 	</div>
 <script>
 $(document).ready(function(){
@@ -126,6 +142,7 @@ $(document).ready(function(){
 		cardValues: [1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9],
 		imageType: 'animals',
 		player: 'anonymous',
+		startTime: 0,
 		init: function() {
 			app.shuffle();
 			app.preloadImages();
@@ -138,6 +155,8 @@ $(document).ready(function(){
 			if($('.player-name').val() !== '') {
 				app.player = $('.player-name').val();
 				app.clickHandlers();
+				app.startTime = new Date();
+				console.log(app.startTime);
 			} else {
 				$('input[type=text]').addClass('shake');
 				setTimeout(function() { $('input[type=text]').removeClass('shake'); }, 500);
@@ -190,7 +209,24 @@ $(document).ready(function(){
 		checkWin: function() {
 			if($('.unmatched').length === 0) {
 				$('.results').show();
+				var endTime = new Date();
+				var time = Math.round((endTime - app.startTime)/1000);
+				$('.results .time').text('Your time was '+time+' seconds');
+				app.highScores(time);
 			}
+		},
+		highScores: function(time) {
+			$.ajax({
+				url:'highscores/view.php',
+				method: 'POST',
+				data: {'name': app.player, 'time': time},
+				dataType: 'JSON',
+				success: function(data) {
+					$.each(data, function(key, value) {
+						$('.results .highscores').append('<li>'+key+' -- '+value+' seconds');
+					});
+				}
+			});
 		},
 		preloadImages: function() {
 			var img = [];
