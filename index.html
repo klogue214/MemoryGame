@@ -4,33 +4,80 @@
 	<title>Memory Game</title>
 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 	<style>
+	@font-face {
+		font-family: gobold;
+		src: url(gobold.ttf);
+	}
 	* {
 		box-sizing: border-box;
+		letter-spacing: 1px;
+		font-family: gobold;
 	}
 	body {
 		background: url('table.jpg');
 		background-size: cover;
 	}
+	h1 {
+		font-size: 48px;
+		margin: 15px 0;
+		color: #fff;
+	}
 	.container {
 		width: 1080px;
 		margin: 25px auto;
 	}
-	.menu {
+	.menu, .results {
+		height: 275px;
+		width: 350px;
+		margin-top: -100px;
+		margin-left: -175px;
 		position: absolute;
-		width: 200px;
-		height: 200px;
-		left: 40%;
-		background: #261600;
-		z-index: 5;
-		opacity: 0.85;
+		padding: 10px;
+		left: 50%;
+		top: 45%;
+		text-align: center;
+		color: #ffeaa0;
+		border: 5px solid #ffeaa0;
+		border-radius: 20px;
+		box-shadow: 0 0 25px 5px #000;
+		background: #000;
+		vertical-align: text-bottom;
+
+	}
+	.results {
 		display: none;
+	}
+	input, label {
+		margin: 10px;
+		width: 75%;
+	}
+	input[type=submit] {
+		font-size: 16px;
+		width: 50%;
+		border: 3px solid #ffeaa0;
+		border-radius: 10px;
+		padding: 10px;
+		background: #000;
+		color: #ffeaa0;
+		outline: 0;
+	}
+	input[type=submit]:hover {
+		cursor: pointer;
+		box-shadow: 0 0 15px #fff;
+	}
+	input[type=text] {
+		padding: 5px;
+		font-size: 18px;
+		border-radius: 10px;
+		outline: 0;
+		text-align: center;
 	}
 	.card {
 		height: 200px;
 		width: 150px;
 		float: left;
 		margin: 15px;
-		border: 5px solid #261600;
+		border: 5px solid #000;
 		border-radius: 5px;
 		box-shadow: 5px 5px 10px #261600;
 		background-image: url('card_back.jpg');
@@ -39,13 +86,22 @@
 	.card:hover {
 		cursor: pointer;
 		border: 5px solid #ffeaa0;
-		box-shadow: 0 0 20px #ffeaa0;
+		box-shadow: 0 0 20px 3px #ffeaa0;
 	}
 	.card.selected {
 		border: 5px solid #ffeaa0;
-		box-shadow: 0 0 20px #ffeaa0;
+		box-shadow: 0 0 20px 3px #ffeaa0;
 		transform: rotateY(180deg);
 		transition: 0.5s;
+	}
+	.shake {
+		animation-name: shake;
+		animation-duration: .5s;
+	}
+	@keyframes shake {
+		0%, 100% {transform: translateX(0);}
+		20%, 60% {transform: translateX(-30px);}
+		40%, 80% {transform: translateX(30px);}
 	}
 	</style>
 </head>
@@ -54,17 +110,40 @@
 		<div class="timer"></div>
 	</div>
 	<div class="menu">
-		
+		<h1>Pick A Match</h1>
+		<form>
+			<label for="name">Enter your name:</label>
+			<input class="player-name" name="name" type="text">
+			<input class="start-game" type="submit" value="Start Game">
+		</form>
+	</div>
+	<div class="results">
+		<h1>You did it!</h1>
 	</div>
 <script>
 $(document).ready(function(){
 	var app = {
 		cardValues: [1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9],
 		imageType: 'animals',
+		player: 'anonymous',
 		init: function() {
 			app.shuffle();
-			app.clickHandlers();
 			app.preloadImages();
+			$('.start-game').on('click', function(e) {
+				app.gatherData(e);
+			});
+		},
+		gatherData: function(e) {
+			e.preventDefault();
+			if($('.player-name').val() !== '') {
+				app.player = $('.player-name').val();
+				app.clickHandlers();
+			} else {
+				$('input[type=text]').addClass('shake');
+				setTimeout(function() { $('input[type=text]').removeClass('shake') }, 500);
+				return false;
+			}
+			$('.menu').fadeOut();
 		},
 		clickHandlers: function() {
 			$('.card').on('click', function() {
@@ -110,7 +189,7 @@ $(document).ready(function(){
 		},
 		checkWin: function() {
 			if($('.unmatched').length === 0) {
-				console.log('you won!');
+				$('.results').show();
 			}
 		},
 		preloadImages: function() {
